@@ -1,0 +1,60 @@
+{
+  "name":           "uupaa.chrometrigger.js",
+  "version":        "0.0.1",
+  "description":    "Web Intent implementation. We will say Goodbye Android Browser!",
+  "url":            "https://github.com/uupaa/ChromeTrigger.js",
+  "keywords":       ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule", "Unstable"],
+  "repository": {
+    "type":         "git",
+    "url":          "https://github.com/uupaa/ChromeTrigger.js.git"
+  },
+  "scripts": {
+    "watch":        "node node_modules/uupaa.watch.js --verbose --action build",
+    "build":        "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty",
+    "build-simple": "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty --nowrap --simple",
+    "build-release":"node node_modules/uupaa.minify.js --verbose --strict --module",
+    "test":         "npm run test-node; npm run test-browser; npm run test-sim",
+    "test-page":    "",
+    "test-debug":   "",
+    "test-node":    "",
+    "test-browser": "open test/index.html",
+    "test-sim":     "node node_modules/uupaa.iphonesimulator.js --run --port 8585 --xcache --open test/index.html",
+    "server":       "http-server -c-1 -p 8585 &",
+    "server-stop":  "",
+    "server-kill":  "killall -- node /usr/local/bin/http-server -p 8585 ; exit 0",
+    "lint":         "node node_modules/uupaa.plato.js; open lint/plato/index.html"
+  },
+  "x-build": {
+    "source":       ["lib/ChromeTrigger.js", "lib/IntentDialog.js"],
+    "output":       "release/ChromeTrigger.min.js",
+    "target":       ["browser"],
+    "label":        ["@dev"],
+    "module": {
+      "develop":    ["uupaa.valid.js"],
+      "release":    []
+    }
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "uupaa.nodemodule.js": "",
+    "uupaa.reflection.js": "",
+    "uupaa.iphonesimulator.js": "",
+    "uupaa.console.js": "",
+    "uupaa.valid.js":   "",
+    "uupaa.help.js":    "",
+    "uupaa.task.js":    "",
+    "uupaa.test.js":    "",
+    "uupaa.watch.js":   "",
+    "uupaa.plato.js":   "",
+    "uupaa.minify.js":  "",
+    "uupaa.spec.js":    "",
+    "uupaa.device.js":  "",
+    "uupaa.browser.js": ""
+  },
+  "lib":            "./lib/",
+  "main":           "./index.js",
+  "author":         "uupaa <uupaa.js@gmail.com>",
+  "license":        "MIT",
+  "contributors":   []
+}
