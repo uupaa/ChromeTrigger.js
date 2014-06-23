@@ -1,4 +1,4 @@
-# ChromeTrigger.js [![Build Status](https://travis-ci.org/uupaa/ChromeTrigger.js.png)](http://travis-ci.org/uupaa/ChromeTrigger.js)
+# ChromeTrigger.js
 
 [![npm](https://nodei.co/npm/uupaa.chrometrigger.js.png?downloads=true&stars=true)](https://nodei.co/npm/uupaa.chrometrigger.js/)
 
