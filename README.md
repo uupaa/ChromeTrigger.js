@@ -6,7 +6,7 @@ Web Intent implementation. We will say Goodbye Android Browser!
 
 ## Document
 
-- [ChromeTrigger.js wiki](https://github.com/uupaa/ChromeTrigger.js/wiki/Home)
+- [ChromeTrigger.js wiki](https://github.com/uupaa/ChromeTrigger.js/wiki/Home) ([Slide](http://uupaa.github.io/Slide/slide/ChromeTrigger.js/index.html))
 - [Development](https://github.com/uupaa/WebModule/wiki/Development)
 - [WebModule](https://github.com/uupaa/WebModule) ([Slide](http://uupaa.github.io/Slide/slide/WebModule/index.html))
 
