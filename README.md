@@ -76,8 +76,10 @@ if (goodbye) {
     if (debug) {
         ChromeTrigger.resetAlwaysSetting();
     }
-    ChromeTrigger.open(param, function(always) {
-        alert("Selected Android browser. " + (always ? "always" : "once"));
+    ChromeTrigger.ready(function() {
+        ChromeTrigger.open(param, function(always) {
+            alert("Selected Android browser. " + (always ? "always" : "once"));
+        });
     });
 }
 </script>

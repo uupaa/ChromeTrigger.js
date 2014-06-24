@@ -1,6 +1,6 @@
 {
   "name":           "uupaa.chrometrigger.js",
-  "version":        "0.1.0",
+  "version":        "0.1.1",
   "description":    "Web Intent implementation. We will say Goodbye Android Browser!",
   "url":            "https://github.com/uupaa/ChromeTrigger.js",
   "keywords":       ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule", "Unstable"],
