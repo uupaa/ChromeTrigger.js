@@ -1,6 +1,6 @@
 {
   "name":           "uupaa.chrometrigger.js",
-  "version":        "0.1.1",
+  "version":        "0.1.3",
   "description":    "Web Intent implementation. We will say Goodbye Android Browser!",
   "url":            "https://github.com/uupaa/ChromeTrigger.js",
   "keywords":       ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule", "Unstable"],
@@ -13,15 +13,16 @@
     "build":        "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty",
     "build-simple": "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty --nowrap --simple",
     "build-release":"node node_modules/uupaa.minify.js --verbose --strict --module",
-    "test":         "npm run test-node; npm run test-browser; npm run test-sim",
+    "test":         "npm run test-node; npm run test-browser",
     "test-page":    "",
     "test-debug":   "",
     "test-node":    "",
-    "test-browser": "open test/index.html",
+    "test-browser": "open test/index.html; open test/index.debug.html",
     "test-sim":     "node node_modules/uupaa.iphonesimulator.js --run --port 8585 --xcache --open test/index.html",
     "server":       "http-server -c-1 -p 8585 &",
     "server-stop":  "",
     "server-kill":  "killall -- node /usr/local/bin/http-server -p 8585 ; exit 0",
+    "hint":         "jshint lib/*.js",
     "lint":         "node node_modules/uupaa.plato.js; open lint/plato/index.html"
   },
   "x-build": {
