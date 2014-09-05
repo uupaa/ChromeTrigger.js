@@ -8,7 +8,9 @@ Web Intent implementation. We will say Goodbye Android Browser!
 
 - [ChromeTrigger.js wiki](https://github.com/uupaa/ChromeTrigger.js/wiki/Home) ([Slide](http://uupaa.github.io/Slide/slide/ChromeTrigger.js/index.html))
 - [Development](https://github.com/uupaa/WebModule/wiki/Development)
-- [WebModule](https://github.com/uupaa/WebModule) ([Slide](http://uupaa.github.io/Slide/slide/WebModule/index.html))
+- [WebModule](https://github.com/uupaa/WebModule)
+    - [Slide](http://uupaa.github.io/Slide/slide/WebModule/index.html)
+    - [Development](https://github.com/uupaa/WebModule/wiki/Development)
 
 
 ## How to use
@@ -16,11 +18,6 @@ Web Intent implementation. We will say Goodbye Android Browser!
 ### Browser
 
 ```html
-<!--
-<script src="../node_modules/uupaa.spec.js/lib/Spec.js"></script>
-<script src="../node_modules/uupaa.device.js/lib/Device.js"></script>
-<script src="../node_modules/uupaa.browser.js/lib/Browser.js"></script>
- -->
 <script src="../lib/IntentDialog.js"></script>
 <script src="../lib/ChromeTrigger.js"></script>
 
@@ -42,27 +39,30 @@ function isGoodByeAndroidBrowser() { // @ret Boolean
                                      // @see https://github.com/uupaa/Browser.js/wiki/isGoodByeAndroidBrowser
     var ua = navigator.userAgent;
 
-    if ( /Android/.test(ua) ) {
-        var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
-
-        if (ver >= 4.0 && ver < 4.4) {
-            if ( /Chrome/.test(ua) && /Version/.test(ua) ) {
-                return true;
-            } else if ( !/Silk|Firefox/.test(ua) ) {
-                return true;
-            }
-        }
+    if ( !/Android/.test(ua) ) { // has not "Android" token
+        return false;
     }
-    return false;
+    if ( /Silk|Firefox/.test(ua) ) { // kindle or Android Firefox
+        return false;
+    }
+    var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
+
+    if (ver < 4.0 || ver >= 4.4) {
+        return false;
+    }
+    // check unsupported functions.
+    // see: http://caniuse.com/#compare=chrome+30,android+4.2-4.3,android+4.4
+    if (typeof Worker === "undefined" &&
+        typeof requestAnimationFrame === "undefined") {
+        return false;
+    }
+    return true;
 }
 </script>
 ```
 
 ```js
 <script>
-//var spec = Browser( Device( Spec() ) );
-//var goodbye = Browser.isGoodByeAndroidBrowser(spec);
-
 var debug = true;
 var goodbye = isGoodByeAndroidBrowser();
 

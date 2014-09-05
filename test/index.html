@@ -134,25 +134,28 @@ function isGoodByeAndroidBrowser() { // @ret Boolean
                                      // @see https://github.com/uupaa/Browser.js/wiki/isGoodByeAndroidBrowser
     var ua = navigator.userAgent;
 
-    if ( /Android/.test(ua) ) {
-        var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
-
-        if (ver >= 4.0 && ver < 4.4) {
-            if ( /Chrome/.test(ua) && /Version/.test(ua) ) {
-                return true;
-            } else if ( !/Silk|Firefox/.test(ua) ) {
-                return true;
-            }
-        }
+    if ( !/Android/.test(ua) ) { // has not "Android" token
+        return false;
     }
-    return false;
+    if ( /Silk|Firefox/.test(ua) ) { // kindle or Android Firefox
+        return false;
+    }
+    var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
+
+    if (ver < 4.0 || ver >= 4.4) {
+        return false;
+    }
+    // check unsupported functions.
+    // see: http://caniuse.com/#compare=chrome+30,android+4.2-4.3,android+4.4
+    if (typeof Worker === "undefined" &&
+        typeof requestAnimationFrame === "undefined") {
+        return false;
+    }
+    return true;
 }
 </script>
 
 <script>
-//var spec = Browser( Device( Spec() ) );
-//var goodbye = Browser.isGoodByeAndroidBrowser(spec);
-
 var debug = false;
 var goodbye = isGoodByeAndroidBrowser();
 
