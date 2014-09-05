@@ -52,8 +52,8 @@ function isGoodByeAndroidBrowser() { // @ret Boolean
     }
     // check unsupported functions.
     // see: http://caniuse.com/#compare=chrome+30,android+4.2-4.3,android+4.4
-    if (typeof Worker === "undefined" &&
-        typeof requestAnimationFrame === "undefined") {
+    if (typeof Worker !== "undefined" ||
+        typeof requestAnimationFrame !== "undefined") {
         return false;
     }
     return true;
