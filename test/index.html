@@ -1,17 +1,13 @@
-<html><head><title>test</title>
-<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
-<meta charset="utf-8">
-</head>
+<!DOCTYPE html><html><head><title>ChromeTrigger test</title>
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<meta charset="utf-8"></head><body>
 <body style="background-color:#a4c639; margin:0; padding:0">
 
-<!--
-<script src="../node_modules/uupaa.spec.js/lib/Spec.js"></script>
- -->
-<script src="../lib/IntentDialog.js"></script>
+<script src=".././test/wmtools.js"></script>
 <script src="../lib/ChromeTrigger.js"></script>
-<!--
-<script src="../release/ChromeTrigger.min.js"></script>
- -->
+<script src="../lib/IntentDialog.js"></script>
+<script src="../release/ChromeTrigger.b.min.js"></script>
+<script src="./testcase.js"></script>
 
 <script type="text/template" id="js-intent-dialog-template">
   <div id="js-intent-dialog" style="display:none">
@@ -128,49 +124,38 @@
 </script>
 
 <script>
-function isGoodByeAndroidBrowser() { // @ret Boolean
-                                     // @see https://github.com/uupaa/Browser.js/wiki/isGoodByeAndroidBrowser
-    var ua = navigator.userAgent;
-
-    if ( !/Android/.test(ua) ) { // has not "Android" token
-        return false;
+function isAOSPBrowser() {
+    if (/Android/.test(navigator.userAgent)) {
+        var version = parseFloat(navigator.userAgent.split("Android")[1].split(";")[0]) || 0.0;
+        if (version >= 4.0 && version < 4.4) {
+            if (typeof requestAnimationFrame === "undefined" &&
+                typeof Worker === "undefined") {
+                return true;
+            }
+        }
     }
-    if ( /Silk|Firefox/.test(ua) ) { // kindle or Android Firefox
-        return false;
-    }
-    var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
-
-    if (ver < 4.0 || ver >= 4.4) {
-        return false;
-    }
-    // check unsupported functions.
-    // see: http://caniuse.com/#compare=chrome+30,android+4.2-4.3,android+4.4
-    if (typeof Worker !== "undefined" ||
-        typeof requestAnimationFrame !== "undefined") {
-        return false;
-    }
-    return true;
+    return false;
 }
-</script>
 
-<script>
-var debug = false;
-var goodbye = isGoodByeAndroidBrowser();
+var goodbye = false;
 
-if (debug) {
+if ( isAOSPBrowser() ) {
     goodbye = true;
+} else {
+    goodbye = confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
 }
+
 if (goodbye) {
-  //var param = { url: location.href };
+  //var param = { url: location.href }; // Reopen this page in Chrome Browser.
     var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
 
-    if (debug) {
+    if ( confirm("Reset always open setting?") ) {
         ChromeTrigger.resetAlwaysSetting();
     }
     ChromeTrigger.ready(function() {
-      ChromeTrigger.open(param, function(always) {
-          alert("Selected Android browser. " + (always ? "always" : "once"));
-      });
+        ChromeTrigger.open(param, function(always) {
+            alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
+        });
     });
 }
 </script>

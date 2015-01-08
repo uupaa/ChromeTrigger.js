@@ -35,50 +35,37 @@ Web Intent implementation. We will say Goodbye Android Browser!
 
 ```js
 <script>
-function isGoodByeAndroidBrowser() { // @ret Boolean
-                                     // @see https://github.com/uupaa/Browser.js/wiki/isGoodByeAndroidBrowser
-    var ua = navigator.userAgent;
-
-    if ( !/Android/.test(ua) ) { // has not "Android" token
-        return false;
+function isAOSPBrowser() {
+    if (/Andoird/.test(navigator.userAgent)) {
+        var version = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
+        if (version >= 4.0 && version < 4.4) {
+            if (typeof Worker !== "undefined" ||
+                typeof requestAnimationFrame !== "undefined") {
+                return true;
+            }
+        }
     }
-    if ( /Silk|Firefox/.test(ua) ) { // kindle or Android Firefox
-        return false;
-    }
-    var ver = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
-
-    if (ver < 4.0 || ver >= 4.4) {
-        return false;
-    }
-    // check unsupported functions.
-    // see: http://caniuse.com/#compare=chrome+30,android+4.2-4.3,android+4.4
-    if (typeof Worker !== "undefined" ||
-        typeof requestAnimationFrame !== "undefined") {
-        return false;
-    }
-    return true;
+    return false;
 }
-</script>
-```
 
-```js
-<script>
-var debug = true;
-var goodbye = isGoodByeAndroidBrowser();
+var goodbye = false;
 
-if (debug) {
+if ( isAOSPBrowser() ) {
     goodbye = true;
+} else {
+    goodbye = confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
 }
+
 if (goodbye) {
-  //var param = { url: location.href };
+  //var param = { url: location.href }; // Reopen this page in Chrome Browser.
     var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
 
-    if (debug) {
+    if ( confirm("Reset always open setting?") ) {
         ChromeTrigger.resetAlwaysSetting();
     }
     ChromeTrigger.ready(function() {
         ChromeTrigger.open(param, function(always) {
-            alert("Selected Android browser. " + (always ? "always" : "once"));
+            alert("User selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
         });
     });
 }
