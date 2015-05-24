@@ -8,45 +8,74 @@ __report = {
         "link": "files/ChromeTrigger_js/index.html"
       },
       "jshint": {
-        "messages": 1
+        "messages": 0
       },
       "complexity": {
         "aggregate": {
-          "line": 1,
-          "complexity": {
-            "sloc": {
-              "physical": 129,
-              "logical": 80
+          "sloc": {
+            "logical": 94,
+            "physical": 153
+          },
+          "cyclomatic": 30,
+          "halstead": {
+            "operators": {
+              "distinct": 25,
+              "total": 197,
+              "identifiers": [
+                "__stripped__"
+              ]
             },
-            "cyclomatic": 28,
+            "operands": {
+              "distinct": 113,
+              "total": 260,
+              "identifiers": [
+                "__stripped__"
+              ]
+            },
+            "length": 457,
+            "vocabulary": 138,
+            "difficulty": 28.761061946902654,
+            "volume": 3248.5956767476237,
+            "effort": 93433.06149937856,
+            "bugs": 1.0828652255825413,
+            "time": 5190.725638854365
+          },
+          "params": 14,
+          "line": 1,
+          "cyclomaticDensity": 31.914893617021278,
+          "complexity": {
+            "cyclomatic": 30,
+            "sloc": {
+              "logical": 94,
+              "physical": 153
+            },
             "halstead": {
               "operators": {
-                "distinct": 23,
-                "total": 175,
+                "distinct": 25,
+                "total": 197,
                 "identifiers": [
                   "__stripped__"
                 ]
               },
               "operands": {
-                "distinct": 92,
-                "total": 232,
+                "distinct": 113,
+                "total": 260,
                 "identifiers": [
                   "__stripped__"
                 ]
               },
-              "length": 407,
-              "vocabulary": 115,
-              "difficulty": 29,
-              "volume": 2786.114450734361,
-              "effort": 80797.31907129647,
-              "bugs": 0.9287048169114537,
-              "time": 4488.739948405359
-            },
-            "params": 11
+              "length": 457,
+              "vocabulary": 138,
+              "difficulty": 28.761061946902654,
+              "volume": 3248.5956767476237,
+              "effort": 93433.06149937856,
+              "bugs": 1.0828652255825413,
+              "time": 5190.725638854365
+            }
           }
         },
         "module": "ChromeTrigger.js",
-        "maintainability": 65.93005930511464
+        "maintainability": 65.3621578061444
       }
     },
     {
@@ -57,56 +86,87 @@ __report = {
         "link": "files/IntentDialog_js/index.html"
       },
       "jshint": {
-        "messages": 1
+        "messages": 0
       },
       "complexity": {
         "aggregate": {
-          "line": 1,
-          "complexity": {
-            "sloc": {
-              "physical": 228,
-              "logical": 141
+          "sloc": {
+            "logical": 141,
+            "physical": 236
+          },
+          "cyclomatic": 14,
+          "halstead": {
+            "operators": {
+              "distinct": 25,
+              "total": 357,
+              "identifiers": [
+                "__stripped__"
+              ]
             },
-            "cyclomatic": 15,
+            "operands": {
+              "distinct": 144,
+              "total": 469,
+              "identifiers": [
+                "__stripped__"
+              ]
+            },
+            "length": 826,
+            "vocabulary": 169,
+            "difficulty": 40.71180555555556,
+            "volume": 6113.126414369084,
+            "effort": 248876.41391832472,
+            "bugs": 2.0377088047896947,
+            "time": 13826.467439906928
+          },
+          "params": 23,
+          "line": 1,
+          "cyclomaticDensity": 9.929078014184398,
+          "complexity": {
+            "cyclomatic": 14,
+            "sloc": {
+              "logical": 141,
+              "physical": 236
+            },
             "halstead": {
               "operators": {
-                "distinct": 22,
-                "total": 344,
+                "distinct": 25,
+                "total": 357,
                 "identifiers": [
                   "__stripped__"
                 ]
               },
               "operands": {
-                "distinct": 130,
-                "total": 450,
+                "distinct": 144,
+                "total": 469,
                 "identifiers": [
                   "__stripped__"
                 ]
               },
-              "length": 794,
-              "vocabulary": 152,
-              "difficulty": 38.07692307692308,
-              "volume": 5754.854445674207,
-              "effort": 219127.1500468256,
-              "bugs": 1.9182848152247358,
-              "time": 12173.730558156978
-            },
-            "params": 21
+              "length": 826,
+              "vocabulary": 169,
+              "difficulty": 40.71180555555556,
+              "volume": 6113.126414369084,
+              "effort": 248876.41391832472,
+              "bugs": 2.0377088047896947,
+              "time": 13826.467439906928
+            }
           }
         },
         "module": "IntentDialog.js",
-        "maintainability": 67.8415374632554
+        "maintainability": 67.65294094821654
       }
     }
   ],
   "summary": {
     "total": {
-      "sloc": 357,
-      "maintainability": 133.77159676837005
+      "jshint": 0,
+      "sloc": 389,
+      "maintainability": 133.01509875436093
     },
     "average": {
-      "sloc": 178,
-      "maintainability": "66.89"
+      "sloc": 194,
+      "maintainability": "66.51",
+      "jshint": "0.00"
     }
   }
 }

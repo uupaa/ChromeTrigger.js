@@ -7,17 +7,16 @@ Web Intent implementation. We will say Goodbye Android Browser!
 ## Document
 
 - [ChromeTrigger.js wiki](https://github.com/uupaa/ChromeTrigger.js/wiki/Home) ([Slide](http://uupaa.github.io/Slide/slide/ChromeTrigger.js/index.html))
-- [Development](https://github.com/uupaa/WebModule/wiki/Development)
 - [WebModule](https://github.com/uupaa/WebModule)
     - [Slide](http://uupaa.github.io/Slide/slide/WebModule/index.html)
     - [Development](https://github.com/uupaa/WebModule/wiki/Development)
 
+## Run on
 
 ## How to use
 
-### Browser
-
 ```html
+<script src="../node_modules/Spec.js/lib/Spec.js"></script>
 <script src="../lib/IntentDialog.js"></script>
 <script src="../lib/ChromeTrigger.js"></script>
 
@@ -35,26 +34,9 @@ Web Intent implementation. We will say Goodbye Android Browser!
 
 ```js
 <script>
-function isAOSPBrowser() {
-    if (/Andoird/.test(navigator.userAgent)) {
-        var version = parseFloat(ua.split("Android")[1].split(";")[0]) || 0.0;
-        if (version >= 4.0 && version < 4.4) {
-            if (typeof Worker !== "undefined" ||
-                typeof requestAnimationFrame !== "undefined") {
-                return true;
-            }
-        }
-    }
-    return false;
-}
+var spec = new Spec();
 
-var goodbye = false;
-
-if ( isAOSPBrowser() ) {
-    goodbye = true;
-} else {
-    goodbye = confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
-}
+var goodbye = spec.CHROME_TRIGGER || confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
 
 if (goodbye) {
   //var param = { url: location.href }; // Reopen this page in Chrome Browser.

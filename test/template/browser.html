@@ -1,9 +1,14 @@
 <!DOCTYPE html><html><head><title>ChromeTrigger test</title>
 <meta name="viewport" content="width=device-width, user-scalable=no">
-<meta charset="utf-8"></head><body>
+<meta charset="utf-8"></head>
 <body style="background-color:#a4c639; margin:0; padding:0">
 
-__SCRIPT__
+<script src="../lib/WebModuleGlobal.js"></script>
+
+__MODULES__
+__WMTOOLS__
+__SOURCES__
+__OUTPUT__
 
 <script type="text/template" id="js-intent-dialog-template">
   <div id="js-intent-dialog" style="display:none">
@@ -96,22 +101,22 @@ __SCRIPT__
       <div class="modal-mask"></div>
       <div class="dialog centering">
         <div class="inner-frame">
-          <div class="caption">{{DIALOG_CAPTION}}</div>
+          <div class="caption">${DIALOG_CAPTION}</div>
           <div class="icons">
             <div class="icon">
               <div class="icon-button">
-                <img src=""><br />{{ICON_CAPTION_0}}
+                <img src=""><br />${ICON_CAPTION_0}
               </div>
             </div>
             <div class="icon">
               <div class="icon-button">
-                <img src=""><br />{{ICON_CAPTION_1}}
+                <img src=""><br />${ICON_CAPTION_1}
               </div>
             </div>
           </div>
           <div class="buttons">
-            <div class="button">{{ALWAYS}}</div>
-            <div class="button">{{JUST_ONCE}}</div>
+            <div class="button">${ALWAYS}</div>
+            <div class="button">${JUST_ONCE}</div>
           </div>
         </div>
       </div>
@@ -120,39 +125,40 @@ __SCRIPT__
 </script>
 
 <script>
-function isAOSPBrowser() {
-    if (/Android/.test(navigator.userAgent)) {
-        var version = parseFloat(navigator.userAgent.split("Android")[1].split(";")[0]) || 0.0;
-        if (version >= 4.0 && version < 4.4) {
-            if (typeof requestAnimationFrame === "undefined" &&
-                typeof Worker === "undefined") {
-                return true;
-            }
+var DEBUG = true;
+
+if (DEBUG) {
+    ChromeTrigger["VERBOSE"] = true;
+    IntentDialog["VERBOSE"]  = true;
+
+    var spec = new Spec();
+    var goodbye = spec.CHROME_TRIGGER || confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
+
+    if (goodbye) {
+      //var param = { url: location.href }; // Reopen this page in Chrome Browser.
+        var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
+
+        if ( confirm("Reset always open setting?") ) {
+            ChromeTrigger.resetAlwaysSetting();
         }
-    }
-    return false;
-}
-
-var goodbye = false;
-
-if ( isAOSPBrowser() ) {
-    goodbye = true;
-} else {
-    goodbye = confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
-}
-
-if (goodbye) {
-  //var param = { url: location.href }; // Reopen this page in Chrome Browser.
-    var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
-
-    if ( confirm("Reset always open setting?") ) {
-        ChromeTrigger.resetAlwaysSetting();
-    }
-    ChromeTrigger.ready(function() {
-        ChromeTrigger.open(param, function(always) {
-            alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
+        ChromeTrigger.ready(function() {
+            ChromeTrigger.open(param, function(always) {
+                alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
+            });
         });
-    });
+    } else {
+        alert("canceled");
+    }
+
+} else {
+
+    var spec = new Spec();
+    if (spec.CHROME_TRIGGER) {
+        ChromeTrigger.ready(function() {
+            ChromeTrigger.open({ url: location.href })
+        });
+    }
+
 }
 </script>
 </body></html>

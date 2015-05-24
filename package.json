@@ -1,9 +1,9 @@
 {
   "name": "uupaa.chrometrigger.js",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Web Intent implementation. We will say Goodbye Android Browser!",
   "url": "https://github.com/uupaa/ChromeTrigger.js",
-  "keywords": ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule", "Unstable"],
+  "keywords": ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule"],
   "repository": {
     "type": "git",
     "url": "https://github.com/uupaa/ChromeTrigger.js.git"
@@ -11,7 +11,7 @@
   "scripts": {
     "sync": "node ../WebModule/run/sync.js; npm update; node ../WebModule/run/page.js",
     "min": "node ../WebModule/run/minify.js --verbose --strict --keep --pretty",
-    "build": "node ../WebModule/run/minify.js --verbose --strict --keep --module",
+    "build": "node ../WebModule/run/minify.js --verbose --strict --keep --release",
     "watch": "node ../WebModule/run/watch.js --verbose --run hint",
     "page": "node ../WebModule/run/page.js --verbose",
     "test": "npm run min; npm run node; npm run browser",
@@ -20,7 +20,7 @@
     "browser": "open http://localhost:8000/ChromeTrigger.js/test/index.html",
     "sim": "node ../WebModule/run/sim.js http://localhost:8000/ChromeTrigger.js/test/index.html",
     "simx": "node ../WebModule/run/sim.js stop",
-    "hint": "jshint lib/*.js",
+    "hint": "eslint lib/*.js",
     "score": "node ../WebModule/run/score.js; open lint/plato/index.html",
     "patch": "node ../WebModule/run/patch.js",
     "setup": "node ../WebModule/run/setup.js",
@@ -35,7 +35,10 @@
       "output": "release/ChromeTrigger.b.min.js"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "uupaa.hash.js": "",
+    "uupaa.spec.js": ""
+  },
   "devDependencies": {},
   "lib": "./lib/",
   "main": "./index.js",
