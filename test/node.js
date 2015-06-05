@@ -1,6 +1,6 @@
 // ChromeTrigger test
 
-require("../lib/WebModuleGlobal.js");
+require("../lib/WebModule.js");
 
 
 

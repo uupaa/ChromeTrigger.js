@@ -3,14 +3,13 @@
 <meta charset="utf-8"></head>
 <body style="background-color:#a4c639; margin:0; padding:0">
 
-<script src="../lib/WebModuleGlobal.js"></script>
+<script src="../lib/WebModule.js"></script>
 
-<script src="../node_modules/uupaa.hash.js/lib/Hash.js"></script>
 <script src="../node_modules/uupaa.spec.js/lib/SpecCatalog.js"></script>
 <script src="../node_modules/uupaa.spec.js/lib/Spec.js"></script>
 <script src="wmtools.js"></script>
-<script src="../lib/ChromeTrigger.js"></script>
 <script src="../lib/IntentDialog.js"></script>
+<script src="../lib/ChromeTrigger.js"></script>
 <script src="../release/ChromeTrigger.b.min.js"></script>
 
 <script type="text/template" id="js-intent-dialog-template">
@@ -131,10 +130,10 @@
 var DEBUG = true;
 
 if (DEBUG) {
-    ChromeTrigger["VERBOSE"] = true;
-    IntentDialog["VERBOSE"]  = true;
+    WebModule.ChromeTrigger["VERBOSE"] = true;
+    WebModule.IntentDialog["VERBOSE"]  = true;
 
-    var spec = new Spec();
+    var spec = new WebModule.Spec();
     var goodbye = spec.CHROME_TRIGGER || confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
 
     if (goodbye) {
@@ -142,10 +141,10 @@ if (DEBUG) {
         var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
 
         if ( confirm("Reset always open setting?") ) {
-            ChromeTrigger.resetAlwaysSetting();
+            WebModule.ChromeTrigger.resetAlwaysSetting();
         }
-        ChromeTrigger.ready(function() {
-            ChromeTrigger.open(param, function(always) {
+        WebModule.ChromeTrigger.ready(function() {
+            WebModule.ChromeTrigger.open(param, function(always) {
                 alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
             });
         });
@@ -155,10 +154,10 @@ if (DEBUG) {
 
 } else {
 
-    var spec = new Spec();
+    var spec = new WebModule.Spec();
     if (spec.CHROME_TRIGGER) {
-        ChromeTrigger.ready(function() {
-            ChromeTrigger.open({ url: location.href })
+        WebModule.ChromeTrigger.ready(function() {
+            WebModule.ChromeTrigger.open({ url: location.href })
         });
     }
 
