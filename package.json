@@ -37,8 +37,7 @@
       "output": "release/ChromeTrigger.b.min.js"
     }
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {},
   "lib": "./lib/",
   "main": "./index.js",
