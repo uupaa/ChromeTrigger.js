@@ -14,6 +14,9 @@ Web Intent implementation. We will say Goodbye Android Browser!
 <script>
 WebModule.publish = true;
 </script>
+<script src="../lib/WebGLDetector.js"></script>
+<script src="../lib/UserAgent.js"></script>
+<script src="../lib/WebIntent.js"></script>
 <script src="../lib/IntentDialog.js"></script>
 <script src="../lib/IntentDialogTemplate.js"></script> <!-- dialog html fragment -->
 <script src="../lib/lang/en.js"></script> <!-- lang pack -->
@@ -23,21 +26,46 @@ WebModule.publish = true;
 
 ```js
 <script>
-var goodbye = ChromeTrigger.AOSP ||
-              confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
+// unit test for developer.
+
+var ua = new UserAgent();
+var lang = ua.LANGUAGE;
+var assetsDir = "./";
+var leftSideApp  = "CHROME"; // "AOSP" or "CHROME" or "APP"
+var rightSideApp = "APP";    // "AOSP" or "CHROME" or "APP"
+
+var goodbye = ua.AOSP ||
+              confirm("This is not a AOSP Stock browser. Do you want to simulate intent action?");
 
 if (goodbye) {
-  //var trigger = new ChromeTrigger("CHROME", "APP");  // Chrome and APP
-  //var trigger = new ChromeTrigger("AOSP",   "AOSP"); // AOSP and APP
-    var trigger = new ChromeTrigger("CHROME", "AOSP"); // Chrome and AOSP
+    var trigger = new ChromeTrigger(leftSideApp, rightSideApp, lang, assetsDir);
 
     // if ( confirm("Reset always open setting?") ) {
     //     trigger.reset();
     // }
 
     trigger.open(function(always) {
-        alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
+        alert("You are selected AOSP Stock browser. " + (always ? "open always" : "open once"));
     });
+}
+</script>
+
+<script>
+// dist code
+
+var ua = new UserAgent();
+
+if (ua.AOSP) {
+    new ChromeTrigger(ua.LANG, "CHROME", "APP").open(function() {
+        alert("Sorry, This WebApp does not work in this Browser.");
+        // bootStrap();
+        return;
+    });
+} else {
+    bootStrap();
+}
+
+function bootStrap() {
 }
 </script>
 ```

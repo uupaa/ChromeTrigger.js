@@ -9,42 +9,16 @@
 WebModule.publish = true;
 </script>
 
+<script src="../node_modules/uupaa.useragent.js/node_modules/uupaa.webgldetector.js/lib/WebGLDetector.js"></script>
+<script src="../node_modules/uupaa.useragent.js/lib/UserAgent.js"></script>
+<script src="../node_modules/uupaa.webintent.js/lib/WebIntent.js"></script>
+<script src="wmtools.js"></script>
 <script src="../lib/IntentDialog.js"></script>
 <script src="../lib/IntentDialogTemplate.js"></script>
 <script src="../lib/lang/en.js"></script>
 <script src="../lib/lang/ja.js"></script>
 <script src="../lib/ChromeTrigger.js"></script>
-<script src="wmtools.js"></script>
+<script src="testcase.js"></script>
 
-
-<script>
-var DEBUG = true;
-
-if (DEBUG) {
-    ChromeTrigger["VERBOSE"] = true;
-    IntentDialog["VERBOSE"]  = true;
-
-    var goodbye = ChromeTrigger.AOSP ||
-                  confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
-
-    if (goodbye) {
-        //ChromeTrigger["LANG"] = "en";
-        var trigger = new ChromeTrigger("CHROME", "APP");
-
-        if ( confirm("Reset always open setting?") ) {
-            trigger.reset();
-        }
-        trigger.open(function(always) {
-            alert("You are selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
-        });
-    } else {
-        alert("canceled");
-    }
-} else if (ChromeTrigger.AOSP) {
-    var trigger = new ChromeTrigger();
-
-    trigger.open();
-}
-</script>
 </body></html>
 
