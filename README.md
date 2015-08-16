@@ -29,16 +29,14 @@ WebModule.publish = true;
 // unit test for developer.
 
 var ua = new UserAgent();
-var lang = ua.LANGUAGE;
-var assetsDir = "./";
-var leftSideApp  = "CHROME"; // "AOSP" or "CHROME" or "APP"
-var rightSideApp = "APP";    // "AOSP" or "CHROME" or "APP"
+var useApp = true;
+var assetsDir = "../assets";
 
 var goodbye = ua.AOSP ||
               confirm("This is not a AOSP Stock browser. Do you want to simulate intent action?");
 
 if (goodbye) {
-    var trigger = new ChromeTrigger(leftSideApp, rightSideApp, lang, assetsDir);
+    var trigger = new ChromeTrigger(useApp, assetsDir, ua.LANGUAGE);
 
     // if ( confirm("Reset always open setting?") ) {
     //     trigger.reset();
@@ -54,9 +52,10 @@ if (goodbye) {
 // dist code
 
 var ua = new UserAgent();
+var assetsDir = "../assets";
 
 if (ua.AOSP) {
-    new ChromeTrigger(ua.LANG, "CHROME", "APP").open(function() {
+    new ChromeTrigger(true, assetsDir).open(function() {
         alert("Sorry, This WebApp does not work in this Browser.");
         // bootStrap();
         return;

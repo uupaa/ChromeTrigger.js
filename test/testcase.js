@@ -38,7 +38,9 @@ function testChromeTrigger(test, pass, miss) {
     var DEBUG = true;
 
     var ua = new UserAgent();
-    var assetsDir = "/ChromeTrigger.js/assets";
+    var useApp = true;
+    var lang = "en"; // ua.LANGUAGE;
+    var assetsDir = "../assets";
 
     if (DEBUG) {
         ChromeTrigger["VERBOSE"] = true;
@@ -48,7 +50,7 @@ function testChromeTrigger(test, pass, miss) {
                       confirm("This is not a AOSP Stock browser. Do you want to simulate intent action?");
 
         if (goodbye) {
-            var trigger = new ChromeTrigger("CHROME", "APP", ua.LANGUAGE, assetsDir);
+            var trigger = new ChromeTrigger(useApp, assetsDir, lang);
 
             if ( confirm("Reset always open setting?") ) {
                 trigger.reset();
