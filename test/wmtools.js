@@ -50,6 +50,8 @@ var ES6_IDENTIFY_KEYWORD =
         "enum|class|super|extends|implements|interface|private|protected|package|" +
         "static|public|export|import|yield|let|const|with";
 
+var functionCache = global["WeakMap"] ? new global["WeakMap"]() : null;
+
 // --- class / interfaces ----------------------------------
 function Reflection() {
 }
@@ -66,7 +68,8 @@ Reflection["getModuleRepository"]   = Reflection_getModuleRepository;   // Refle
 Reflection["getBaseClassName"]      = Reflection_getBaseClassName;      // Reflection.getBaseClassName(value):String
 Reflection["getConstructorName"]    = Reflection_getConstructorName;    // Reflection.getConstructorName(value):String
 // --- function ---
-Reflection["getFunctionAttribute"]  = Reflection_getFunctionAttribute;  // Reflection.getFunctionAttribute(target:Function, name:String = "all"):Object
+Reflection["parseFunction"]         = Reflection_parseFunction;         // Reflection.parseFunction(target:Function):Object
+Reflection["buildFunction"]         = Reflection_buildFunction;         // Reflection.buildFunction(declaration:Object):String
 // --- link ---
 Reflection["getSearchLink"]         = Reflection_getSearchLink;         // Reflection.getSearchLink(path:String):Object
 Reflection["getReferenceLink"]      = Reflection_getReferenceLink;      // Reflection.getReferenceLink(path:String):Object
@@ -196,31 +199,29 @@ function _findPropertyMember(target, root, className, keys) {
     return "";
 }
 
-function Reflection_getFunctionAttribute(target, // @arg Function
-                                         name) { // @arg String = "all"
-                                                 // @ret Object - { attrName: { name, type, optional, comment }, ... }
-    var result = {};
-    var sourceCode = target + "";
-    var head = _splitFunctionDeclaration(sourceCode)["head"]; // { head, body }
+function Reflection_parseFunction(target) { // @arg Function
+                                            // @ret Object - { name:String, head:StringArray, body:StringArray, arg:StringArray, ret:StringArray }
+    if (functionCache && functionCache.has(target)) {
+        return functionCache.get(target);
+    }
+    var result = _splitFunctionDeclaration(target + ""); // { head, body }
 
-    switch (name || "all") {
-    case "all":
-        _getArg(head, result);
-        _getRet(head, result);
-        break;
-    case "arg":
-        _getArg(head, result);
-        break;
-    case "ret":
-        _getRet(head, result);
-        break;
+    result["name"] = target["name"];
+    result["arg"]  = _getArg(result["head"]);
+    result["ret"]  = _getRet(result["head"]);
+
+    if (functionCache) {
+        functionCache.set(target, result);
     }
     return result;
 }
 
-function _getArg(head,     // @arg StringArray - [line, ...]
-                 result) { // @arg Object
-                           // @ret Object - result + { "arg": [{ name, type, optional, comment }, ...] }
+function Reflection_buildFunction(declaration) { // @arg Object - { head, body, arg, ret }
+    return ""; // TODO impl
+}
+
+function _getArg(head) { // @arg StringArray - [line, ...]
+                         // @ret Object - [{ name, type, optional, comment }, ...]
     // get @arg attribute.
     //
     //      function Foo_add(name,     // @arg Function|String = ""   comment
@@ -230,8 +231,7 @@ function _getArg(head,     // @arg StringArray - [line, ...]
     //                       name              type              opt  comment
     //      }
 
-    result["arg"] = [];
-
+    var result = [];
     var format = /^([\w\|\/,]+)\s*(=\s*("[^"]*"|'[^']*'|\S+))?\s*([^\n]*)$/;
 
     head.forEach(function(line, lineNumber) {
@@ -251,16 +251,15 @@ function _getArg(head,     // @arg StringArray - [line, ...]
                 optional = token[3] || "";
                 comment  =(token[4] || "").replace(/^[ :#\-]+/, "");
             }
-            result["arg"].push({ "name": name, "type": type,
-                                 "optional": optional, "comment": comment });
+            result.push({ "name": name, "type": type,
+                          "optional": optional, "comment": comment });
         }
     });
     return result;
 }
 
-function _getRet(head,     // @arg StringArray - [line, ...]
-                 result) { // @arg Object
-                           // @ret Object - { "ret": { types, comment }, ... }
+function _getRet(head) { // @arg StringArray - [line, ...]
+                         // @ret Object - [{ types, comment }, ...]
     // get @ret attribute.
     //
     //      function Foo_add(name,     // @arg Function|String = ""   comment
@@ -270,8 +269,7 @@ function _getRet(head,     // @arg StringArray - [line, ...]
     //                                         type                   comment
     //      }
 
-    result["ret"] = [];
-
+    var result = [];
     var format = /^([\w\|\/,]+)\s+([^\n]*)$/;
 
     head.forEach(function(line, lineNumber) {
@@ -286,9 +284,9 @@ function _getRet(head,     // @arg StringArray - [line, ...]
 
             if (token) {
                 type    = token[1];
-                comment = token[2];
+                comment =(token[2] || "").replace(/^[ :#\-]+/, "");
             }
-            result["ret"].push({ "type": type, "comment": comment });
+            result.push({ "type": type, "comment": comment });
         }
     });
     return result;
@@ -722,7 +720,11 @@ Valid["isRegistered"]   = Valid_isRegistered;   // Valid.isRegistered(type:HookT
 function Valid_args(api,    // @arg Function
                     args) { // @arg Array|ArrayLike
     if (global["Reflection"]) {
-        global["Reflection"]["getFunctionAttribute"](api, "arg")["arg"].forEach(function(item, index) {
+        var func = global["Reflection"]["parseFunction"](api);
+
+        //global["Reflection"]["buildFunction"](func);
+
+        func["arg"].forEach(function(item, index) {
             var type = item["type"];
 
             if (item["optional"]) {
@@ -800,6 +802,9 @@ function Valid_type(value,   // @arg Any
         if (type in global) { // Is this global Class?
             return baseClassName === type;
         }
+//      if (type in global["WebModule"]) { // Is this WebModule Class?
+//          return baseClassName === type;
+//      }
 
         // Valid.register(type) matching
         if (type in _hook) {
@@ -822,6 +827,9 @@ function Valid_type(value,   // @arg Any
                 if (compositeTypes in global) {
                     return _some(compositeTypes);
                 }
+//              if (compositeTypes in global["WebModule"]) {
+//                  return _some(compositeTypes);
+//              }
             }
         }
         return false;
@@ -1525,6 +1533,8 @@ var ERR  = "\u001b[31m";
 var WARN = "\u001b[33m";
 var INFO = "\u001b[32m";
 var CLR  = "\u001b[0m";
+var GHOST = "\uD83D\uDC7B";
+var BEER  = "\uD83C\uDF7B";
 
 // --- class / interfaces ----------------------------------
 function Test(moduleName, // @arg String|StringArray - target modules.
@@ -1620,6 +1630,7 @@ function Test_run(deprecated) { // @ret TestFunctionArray
 function _testRunner(that,               // @arg this
                      finishedCallback) { // @arg Function
     var testCases = that._testCases.slice(); // clone
+    var progress = { cur: 0, max: testCases.length };
     var task = new Task(testCases.length, finishedCallback, { "tick": _next });
 
     _next();
@@ -1628,10 +1639,27 @@ function _testRunner(that,               // @arg this
         var testCase = testCases.shift();
         if (!testCase) { return; }
 
-        var testCaseName = testCase.name || (testCase + "").split(" ")[1].split("\x28")[0];
+        var testCaseName = _getFunctionName(testCase);
         if (testCase.length === 0) {
             throw new Error("Function " + testCaseName + " has not argument.");
         }
+        var test = {
+            done: function(error) {
+                if (IN_BROWSER || IN_NW) {
+                    _addTestButton(that, testCase, error ? "red" : "green");
+
+                    var green = ((++progress.cur / progress.max) * 255) | 0;
+                    var bgcolor = "rgb(0, " + green + ", 0)";
+
+                    document.body["style"]["backgroundColor"] = bgcolor;
+                }
+                if (error) {
+                    task.miss();
+                } else {
+                    task.pass();
+                }
+            }
+        };
         var pass = _getPassFunction(that, testCaseName + " pass");
         var miss = _getMissFunction(that, testCaseName + " miss");
 
@@ -1641,10 +1669,10 @@ function _testRunner(that,               // @arg this
         //  }
 
         if (!that._ignoreError) {
-            testCase(task, pass, miss); // execute testCase
+            testCase(test, pass, miss); // execute testCase
         } else {
             try {
-                testCase(task, pass, miss);
+                testCase(test, pass, miss);
             } catch (o_O) { // [!] catch uncaught exception
                 miss();
                 if (IN_NODE) {
@@ -1689,10 +1717,12 @@ function _nwTestRunner(that, task) {
 function _onload(that, task) {
     _testRunner(that, function finishedCallback(err) {
         _finishedLog(that, err);
-        document.body["style"]["backgroundColor"] = err ? "red" : "lime";
-        if (that._button) {
-            _addTestButtons(that, that._testCases);
-        }
+
+        var n = that._secondary ? 2 : 1;
+
+        document.title = (err ? GHOST : BEER).repeat(n) + document.title;
+
+      //document.body["style"]["backgroundColor"] = err ? "red" : "lime";
         task.done(err);
     });
 }
@@ -1825,34 +1855,50 @@ function _getMissFunction(that, missMessage) { // @ret MissFunction
 }
 
 function _finishedLog(that, err) {
+    var n = that._secondary ? 2 : 1;
+
     if (err) {
-        _getMissFunction(that, "SOME MISSED.")();
+        _getMissFunction(that, GHOST.repeat(n) + "  SOME MISSED.")();
     } else {
-        _getPassFunction(that, "ALL PASSED.")();
+        _getPassFunction(that, BEER.repeat(n)  + "  ALL PASSED.")();
     }
 }
 
-function _addTestButtons(that, cases) { // @arg TestCaseFunctionArray
+function _addTestButton(that,
+                        testCase,      // @arg TestCaseFunction
+                        buttonColor) { // @arg String - button color
     // add <input type="button" onclick="test()" value="test()" /> buttons
-    cases.forEach(function(fn, index) {
-        var itemName = fn["name"] || (fn + "").split(" ")[1].split("\x28")[0];
-        var safeName = itemName.replace(/\$/, "_"); // "concat$" -> "concat_"
+    var itemName = _getFunctionName(testCase);
+    var safeName = itemName.replace(/\$/, "_"); // "concat$" -> "concat_"
 
-        if (!document.querySelector("#" + safeName)) {
-            var inputNode = document.createElement("input");
-            var next = "{pass:function(){},miss:function(){},done:function(){}}";
-            var pass = "function(){console.log('"   + itemName + " pass')}";
-            var miss = "function(){console.error('" + itemName + " miss')}";
+    if (!document.querySelector("#" + safeName)) {
+        var inputNode = document.createElement("input");
+        var next = "{pass:function(){},miss:function(){},done:function(){}}";
+        var pass = "function(){console.log('"   + itemName + " pass')}";
+        var miss = "function(){console.error('" + itemName + " miss')}";
+        var index = that._testCases.indexOf(testCase);
 
-            inputNode.setAttribute("id", safeName);
-            inputNode.setAttribute("type", "button");
-            inputNode.setAttribute("value", itemName + "()");
-            inputNode.setAttribute("onclick", "ModuleTest" + that._module[0] +
-                    "[" + index + "](" + next + ", " + pass + ", " + miss + ")");
+        inputNode.setAttribute("id", safeName);
+        inputNode.setAttribute("type", "button");
+        inputNode.setAttribute("style", "color:" + buttonColor);
+        inputNode.setAttribute("value", itemName + "()");
+        inputNode.setAttribute("onclick", "ModuleTest" + that._module[0] +
+                "[" + index + "](" + next + ", " + pass + ", " + miss + ")");
 
-            document.body.appendChild(inputNode);
-        }
-    });
+        document.body.appendChild(inputNode);
+    }
+}
+
+function _getFunctionName(fn) {
+    return fn["name"] ||
+          (fn + "").split(" ")[1].split("\x28")[0]; // IE
+}
+
+if (!String.prototype.repeat) {
+    String.prototype.repeat = function(n) {
+        n = n | 0;
+        return (this.length && n > 0) ? new Array(n + 1).join(this) : "";
+    };
 }
 
 // --- exports ---------------------------------------------

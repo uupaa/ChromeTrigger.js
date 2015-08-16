@@ -4,49 +4,67 @@
 
 Web Intent implementation. We will say Goodbye Android Browser!
 
-## Document
-
 - ChromeTrigger.js made of [WebModule](https://github.com/uupaa/WebModule).
 - [Spec](https://github.com/uupaa/ChromeTrigger.js/wiki/ChromeTrigger)
 
 ## Browser and NW.js(node-webkit)
 
 ```js
-<script src="<your-install-dir>/lib/WebModule.js"></script>
-<script src="<your-install-dir>/node_modules/Spec.js/lib/Spec.js"></script>
-<script src="<your-install-dir>/lib/IntentDialog.js"></script>
-<script src="<your-install-dir>/lib/ChromeTrigger.js"></script>
+<script src="../lib/WebModule.js"></script>
 <script>
-<script type="text/template" id="js-intent-dialog-template">
-  <div id="js-intent-dialog" style="display:none">
-    <style>
-        (omit)
-    </style>
-    <div class="frame">
-        (omit)
-    </div>
-  </div>
+WebModule.publish = true;
 </script>
-```
+<script src="../lib/WebGLDetector.js"></script>
+<script src="../lib/UserAgent.js"></script>
+<script src="../lib/WebIntent.js"></script>
+<script src="../lib/IntentDialog.js"></script>
+<script src="../lib/IntentDialogTemplate.js"></script> <!-- dialog html fragment -->
+<script src="../lib/lang/en.js"></script> <!-- lang pack -->
+<script src="../lib/lang/ja.js"></script> <!-- lang pack -->
+<script src="../lib/ChromeTrigger.js"></script>
+
 
 ```js
 <script>
-var spec = new WebModule.Spec();
+// unit test for developer.
 
-var goodbye = spec.CHROME_TRIGGER || confirm("This is not a AOSP(Android) browser. Do you want to simulate that?");
+var ua = new UserAgent();
+var useApp = true;
+var assetsDir = "../assets";
+
+var goodbye = ua.AOSP ||
+              confirm("This is not a AOSP Stock browser. Do you want to simulate intent action?");
 
 if (goodbye) {
-  //var param = { url: location.href }; // Reopen this page in Chrome Browser.
-    var param = { url: "http://caniuse.com/#compare=ios_saf+7.0-7.1,ios_saf+8,android+4.2-4.3,android+4.4,and_chr+0" };
+    var trigger = new ChromeTrigger(useApp, assetsDir, ua.LANGUAGE);
 
-    if ( confirm("Reset always open setting?") ) {
-        WebModule.ChromeTrigger.resetAlwaysSetting();
-    }
-    WebModule.ChromeTrigger.ready(function() {
-        WebModule.ChromeTrigger.open(param, function(always) {
-            alert("User selected AOSP(Android) browser. " + (always ? "open always" : "open once"));
-        });
+    // if ( confirm("Reset always open setting?") ) {
+    //     trigger.reset();
+    // }
+
+    trigger.open(function(always) {
+        alert("You are selected AOSP Stock browser. " + (always ? "open always" : "open once"));
     });
+}
+</script>
+
+<script>
+// dist code
+
+var ua = new UserAgent();
+var assetsDir = "../assets";
+
+if (ua.AOSP) {
+    new ChromeTrigger(true, assetsDir).open(function() {
+        alert("Sorry, This WebApp does not work in this Browser.");
+        // bootStrap();
+        return;
+    });
+} else {
+    bootStrap();
+}
+
+function bootStrap() {
 }
 </script>
 ```

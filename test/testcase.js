@@ -21,7 +21,7 @@ var test = new Test("ChromeTrigger", {
 
 if (IN_BROWSER || IN_NW) {
     test.add([
-        // browser and node-webkit test
+        testChromeTrigger,
     ]);
 } else if (IN_WORKER) {
     test.add([
@@ -34,6 +34,39 @@ if (IN_BROWSER || IN_NW) {
 }
 
 // --- test cases ------------------------------------------
+function testChromeTrigger(test, pass, miss) {
+    var DEBUG = true;
+
+    var ua = new UserAgent();
+    var useApp = true;
+    var lang = "en"; // ua.LANGUAGE;
+    var assetsDir = "../assets";
+
+    if (DEBUG) {
+        ChromeTrigger["VERBOSE"] = true;
+        IntentDialog["VERBOSE"]  = true;
+
+        var goodbye = ua.AOSP ||
+                      confirm("This is not a AOSP Stock browser. Do you want to simulate intent action?");
+
+        if (goodbye) {
+            var trigger = new ChromeTrigger(useApp, assetsDir, lang);
+
+            if ( confirm("Reset always open setting?") ) {
+                trigger.reset();
+            }
+            trigger.open(function(always) {
+                alert("You are selected AOSP Stock browser. " + (always ? "open always" : "open once"));
+            });
+        } else {
+            alert("canceled");
+        }
+    } else if (ua.AOSP) {
+        var trigger = new ChromeTrigger();
+
+        trigger.open();
+    }
+}
 
 return test.run();
 

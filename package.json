@@ -1,6 +1,6 @@
 {
   "name": "uupaa.chrometrigger.js",
-  "version": "0.2.3",
+  "version": "0.3.2",
   "description": "Web Intent implementation. We will say Goodbye Android Browser!",
   "url": "https://github.com/uupaa/ChromeTrigger.js",
   "keywords": ["WebIntent", "Intent", "Android", "Browser", "Goodbye", "uupaa", "WebModule"],
@@ -25,18 +25,21 @@
     "patch": "node ../WebModule/run/patch.js",
     "setup": "node ../WebModule/run/setup.js",
     "start": "cd ../; Python -m SimpleHTTPServer 8000 &",
-    "stop": "killall -- Python -m SimpleHTTPServer 8000; exit 0"
+    "stop": "killall -- Python -m SimpleHTTPServer 8000; exit 0",
+    "wiki": "node ../WebModule/run/wiki.js",
+    "add-src": "node ../WebModule/run/add-src.js"
   },
   "webmodule": {
     "develop": false,
     "label": ["@dev"],
     "browser": {
-      "source": ["lib/IntentDialog.js", "lib/ChromeTrigger.js"],
+      "source": ["lib/IntentDialog.js", "lib/IntentDialogTemplate.js", "lib/lang/en.js", "lib/lang/ja.js", "lib/ChromeTrigger.js"],
       "output": "release/ChromeTrigger.b.min.js"
     }
   },
   "dependencies": {
-    "uupaa.spec.js": ""
+    "uupaa.useragent.js": "",
+    "uupaa.webintent.js": ""
   },
   "devDependencies": {},
   "lib": "./lib/",
